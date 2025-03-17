@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Destinos Mundo</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet">
+        <style>
+        
+        :root {
+           
+            --color-dark: #0c0c14;
+            --color-light: #ffffff;
+            --color-accent: #ff6b35;
+            --color-accent-hover: #ff8b5a;
+            --color-accent-soft: rgba(255, 107, 53, 0.15);
+            --color-secondary: #4361ee;
+            --color-text-secondary: rgba(255, 255, 255, 0.8);
+            --overlay-gradient: linear-gradient(
+                to right,
+                rgba(12, 12, 20, 0.85) 0%,
+                rgba(12, 12, 20, 0.65) 50%,
+                rgba(12, 12, 20, 0.4) 100%
+            );
+            
+         
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            
+          
+            --space-1: 8px;
+            --space-2: 16px;
+            --space-3: 24px;
+            --space-4: 32px;
+            --space-5: 48px;
+            --space-6: 64px;
+            --space-7: 80px;
+            --space-8: 96px;
+            
+       
+            --transition-fast: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-medium: 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-slow: 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+            
+
+            --radius-small: 6px;
+            --radius-medium: 12px;
+            --radius-large: 24px;
+            --radius-full: 9999px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            overflow-x: hidden;
+            font-weight: 300;
+            line-height: 1.5;
+            font-size: 16px;
+        }
+        
+  
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: var(--space-3) var(--space-5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color var(--transition-medium);
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        header.scrolled {
+            background-color: rgba(12, 12, 20, 0.9);
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            position: relative;
+        }
+        
+        .logo span {
+            color: var(--color-accent);
+            font-weight: 500;
+        }
+        
+        nav {
+            display: flex;
+            gap: var(--space-4);
+        }
+        
+        nav a {
+            color: var(--color-light);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            padding: var(--space-1) var(--space-1);
+            position: relative;
+            transition: color var(--transition-fast);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--color-accent);
+            transition: width var(--transition-fast);
+        }
+        
+        nav a:hover,
+        nav a.active {
+            color: var(--color-accent);
+        }
+        
+        nav a:hover::after,
+        nav a.active::after {
+            width: 100%;
+        }
+        
+    
+        .container {
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .list {
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+        
+        .list-item {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-medium), visibility var(--transition-medium);
+        }
+        
+        .list-item:first-child {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .list-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+        }
+        
+        .list-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--overlay-gradient);
+        }
+        
+        .content {
+            position: absolute;
+            bottom: 20%;
+            left: var(--space-7);
+            width: 50%;
+            max-width: 800px;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity var(--transition-medium) 0.3s, transform var(--transition-medium) 0.3s;
+        }
+        
+        .list-item:first-child .content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .country {
+            display: inline-block;
+            font-family: var(--font-body);
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: var(--space-2);
+            position: relative;
+            padding-left: var(--space-4);
+        }
+        
+        .country::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: var(--space-3);
+            height: 2px;
+            background-color: var(--color-accent);
+            transform: translateY(-50%);
+        }
+        
+        .title {
+            font-family: var(--font-display);
+            font-size: 7.5rem;
+            font-weight: 700;
+            line-height: 0.9;
+            margin-bottom: var(--space-4);
+            letter-spacing: -0.02em;
+            background: linear-gradient(45deg, var(--color-light) 0%, rgba(255, 255, 255, 0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .description {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: var(--space-5);
+            max-width: 95%;
+            color: var(--color-text-secondary);
+            font-weight: 400;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .buttons button {
+            height: 60px;
+            padding: 0 var(--space-4);
+            border-radius: var(--radius-small);
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .buttons button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: transform var(--transition-fast);
+            transform: skewX(-15deg);
+        }
+        
+        .buttons button:hover::before {
+            transform: translateX(200%) skewX(-15deg);
+        }
+        
+        .buttons button:first-child {
+            background-color: var(--color-accent);
+            color: white;
+            border: none;
+        }
+        
+        .buttons button:first-child:hover {
+            background-color: var(--color-accent-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+        }
+        
+        .buttons button:last-child {
+            background-color: transparent;
+            color: var(--color-light);
+            border: 2px solid var(--color-light);
+        }
+        
+        .buttons button:last-child:hover {
+            background-color: var(--color-light);
+            color: var(--color-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+        }
+        
+    
+        .thumb {
+            position: absolute;
+            bottom: var(--space-5);
+            right: var(--space-5);
+            display: flex;
+            gap: var(--space-3);
+            z-index: 10;
+        }
+        
+        .thumb-item {
+            width: 180px;
+            height: 240px;
+            border-radius: var(--radius-medium);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: 
+                transform var(--transition-fast),
+                box-shadow var(--transition-fast),
+                opacity var(--transition-fast);
+            opacity: 0.6;
+            transform: scale(0.92);
+        }
+        
+        .thumb-item:hover {
+            opacity: 0.8;
+            transform: scale(0.96);
+        }
+        
+        .thumb-item:first-child {
+            opacity: 1;
+            transform: scale(1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--color-accent);
+        }
+        
+        .thumb-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-medium);
+        }
+        
+        .thumb-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .thumb .content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: var(--space-2);
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.8) 0%,
+                rgba(0, 0, 0, 0) 100%
+            );
+            opacity: 1;
+            transform: none;
+        }
+        
+        .thumb .content h3 {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .thumb .content p {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            font-weight: 400;
+        }
+        
+  
+        .arrows {
+            position: absolute;
+            bottom: calc(var(--space-5) * 2);
+            left: var(--space-7);
+            display: flex;
+            gap: var(--space-2);
+            z-index: 10;
+        }
+        
+        .arrows button {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: var(--color-light);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .arrows button:hover {
+            background-color: var(--color-accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+        }
+        
+  
+        .container.next .list-item,
+        .container.back .list-item {
+            transition: all var(--transition-medium);
+        }
+        
+    
+        .container.next .list-item {
+            animation: fadeOutLeft 0.5s forwards;
+        }
+        
+        .container.next .list-item:first-child {
+            animation: fadeInRight 0.5s forwards;
+        }
+        
+        .container.back .list-item {
+            animation: fadeOutRight 0.5s forwards;
+        }
+        
+        .container.back .list-item:first-child {
+            animation: fadeInLeft 0.5s forwards;
+        }
+        
+      
+        .container.next .thumb {
+            animation: thumbSlideLeft 0.5s forwards;
+        }
+        
+        .container.back .thumb {
+            animation: thumbSlideRight 0.5s forwards;
+        }
+        
+     
+        @keyframes fadeOutLeft {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+        }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes thumbSlideLeft {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-10px);
+            }
+        }
+        
+        @keyframes thumbSlideRight {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(10px);
+            }
+        }
+        
+ 
+        @media (max-width: 1400px) {
+            .title {
+                font-size: 6rem;
+            }
+            
+            .content {
+                width: 60%;
+            }
+            
+            .thumb-item {
+                width: 160px;
+                height: 220px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .title {
+                font-size: 5rem;
+            }
+            
+            .content {
+                width: 70%;
+                left: var(--space-5);
+            }
+            
+            .description {
+                font-size: 18px;
+            }
+            
+            .thumb-item {
+                width: 140px;
+                height: 200px;
+            }
+            
+            .arrows {
+                left: var(--space-5);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .title {
+                font-size: 4rem;
+            }
+            
+            .content {
+                width: 80%;
+                left: var(--space-4);
+            }
+            
+            .description {
+                font-size: 16px;
+            }
+            
+            .thumb-item {
+                width: 120px;
+                height: 170px;
+            }
+            
+            .thumb .content h3 {
+                font-size: 18px;
+            }
+            
+            .arrows button {
+                width: 56px;
+                height: 56px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 28px;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            .title {
+                font-size: 3.5rem;
+            }
+            
+            .content {
+                width: 90%;
+                left: var(--space-3);
+                bottom: 25%;
+            }
+            
+            .thumb {
+                bottom: var(--space-3);
+                right: var(--space-3);
+                gap: var(--space-2);
+            }
+            
+            .thumb-item {
+                width: 100px;
+                height: 140px;
+            }
+            
+            .thumb .content h3 {
+                font-size: 16px;
+            }
+            
+            .thumb .content p {
+                display: none;
+            }
+            
+            .buttons button {
+                height: 50px;
+                padding: 0 var(--space-3);
+                font-size: 14px;
+            }
+            
+            .arrows {
+                bottom: var(--space-5);
+                left: var(--space-3);
+            }
+            
+            .arrows button {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .title {
+                font-size: 3rem;
+            }
+            
+            .description {
+                font-size: 16px;
+                margin-bottom: var(--space-3);
+            }
+            
+            .content {
+                bottom: 30%;
+            }
+            
+            .thumb-item {
+                width: 80px;
+                height: 110px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                gap: var(--space-2);
+            }
+            
+            .buttons button {
+                width: 100%;
+            }
+        }
+    </style>
+    </head>
+    <body>
+        <header>
+            <div class="logo">Destinos<span>Mundo</span></div>
+            <nav>
+                <a href="#" class="active">Home</a>
+                <a href="#">Informações</a>
+                <a href="#">Fale Conosco</a>
+            </nav>
+        </header>
+
+        <main class="container">
+            <div class="list">
+                <div class="list-item">
+                    <img src="./img/img1.jpg" alt="Bali">
+                    <div class="content">
+                        <span class="country">Indonésia</span>
+                        <h2 class="title">Bali</h2>
+                        <p class="description">Uma ilha paradisíaca com praias
+                            encantadoras, templos místicos e paisagens
+                            vulcânicas. Experimente a rica cultura balinesa e a
+                            hospitalidade ímpar de seus habitantes.</p>
+                        <div class="buttons">
+                            <button>Saiba Mais</button>
+                            <button>Acessar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="list-item">
+                    <img src="./img/img2.jpg" alt="Paris">
+                    <div class="content">
+                        <span class="country">França</span>
+                        <h2 class="title">Paris</h2>
+                        <p class="description">A cidade luz, conhecida por sua
+                            arquitetura icônica, gastronomia refinada e
+                            atmosfera romântica. Explore suas avenidas, museus
+                            de classe mundial e a atmosfera única.</p>
+                        <div class="buttons">
+                            <button>Saiba Mais</button>
+                            <button>Acessar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="list-item">
+                    <img src="./img/img3.jpg" alt="Roma">
+                    <div class="content">
+                        <span class="country">Itália</span>
+                        <h2 class="title">Roma</h2>
+                        <p class="description">Cidade eterna onde o presente e o
+                            passado coexistem. Descubra a história nas ruínas
+                            antigas, saboreie a culinária italiana autêntica e
+                            viva o estilo de vida italiano.</p>
+                        <div class="buttons">
+                            <button>Saiba Mais</button>
+                            <button>Acessar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="list-item">
+                    <img src="./img/img4.jpg" alt="Veneza">
+                    <div class="content">
+                        <span class="country">Itália</span>
+                        <h2 class="title">Veneza</h2>
+                        <p class="description">A cidade dos canais, com suas
+                            gôndolas, palácios aquáticos e atmosfera mágica.
+                            Perca-se nos labirintos de ruelas e desfrute da
+                            beleza singular desta cidade flutuante.</p>
+                        <div class="buttons">
+                            <button>Saiba Mais</button>
+                            <button>Acessar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thumb">
+                <div class="thumb-item">
+                    <img src="./img/img1.jpg" alt="Bali">
+                    <div class="content">
+                        <h3>Bali</h3>
+                        <p>Visite Bali</p>
+                    </div>
+                </div>
+
+                <div class="thumb-item">
+                    <img src="./img/img2.jpg" alt="Paris">
+                    <div class="content">
+                        <h3>Paris</h3>
+                        <p>Visite Paris</p>
+                    </div>
+                </div>
+
+                <div class="thumb-item">
+                    <img src="./img/img3.jpg" alt="Roma">
+                    <div class="content">
+                        <h3>Roma</h3>
+                        <p>Visite Roma</p>
+                    </div>
+                </div>
+
+                <div class="thumb-item">
+                    <img src="./img/img4.jpg" alt="Veneza">
+                    <div class="content">
+                        <h3>Veneza</h3>
+                        <p>Visite Veneza</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrows">
+                <button class="back"> < </button>
+                <button class="next"> > </button>
+            </div>
+        </main>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+         
+            let btnNext = document.querySelector('.next');
+            let btnBack = document.querySelector('.back');
+            let container = document.querySelector('.container');
+            let list = document.querySelector('.container .list');
+            let thumb = document.querySelector('.container .thumb');
+            let header = document.querySelector('header');
+            
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+            
+            
+            function moveItemsOnClick(type) {
+                console.log('Movendo para:', type);
+                
+              
+                let listItems = document.querySelectorAll('.list .list-item');
+                let thumbItems = document.querySelectorAll('.thumb .thumb-item');
+                
+                if (type === 'next') {
+                    
+                    container.classList.add('next');
+                    
+               
+                    setTimeout(() => {
+                    
+                        list.appendChild(listItems[0]);
+                        thumb.appendChild(thumbItems[0]);
+                        
+                      
+                        updateActiveStates();
+                    }, 50);
+                } else {
+               
+                    container.classList.add('back');
+                    
+                    
+                    setTimeout(() => {
+                        
+                        list.prepend(listItems[listItems.length - 1]);
+                        thumb.prepend(thumbItems[thumbItems.length - 1]);
+                        
+                 
+                        updateActiveStates();
+                    }, 50);
+                }
+                
+               
+                setTimeout(() => {
+                    container.classList.remove('next');
+                    container.classList.remove('back');
+                }, 500);
+            }
+            
+      
+            function updateActiveStates() {
+         
+                let listItems = document.querySelectorAll('.list .list-item');
+                let thumbItems = document.querySelectorAll('.thumb .thumb-item');
+                
+        
+                listItems.forEach((item, index) => {
+                    if (index === 0) {
+                        item.style.opacity = '1';
+                        item.style.visibility = 'visible';
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.visibility = 'hidden';
+                    }
+                });
+                
+             
+                thumbItems.forEach((item, index) => {
+                    if (index === 0) {
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                        item.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)';
+                        item.style.border = '2px solid var(--color-accent)';
+                    } else {
+                        item.style.opacity = '0.6';
+                        item.style.transform = 'scale(0.92)';
+                        item.style.boxShadow = 'none';
+                        item.style.border = 'none';
+                    }
+                });
+            }
+            
+        
+            btnNext.addEventListener('click', function() {
+                moveItemsOnClick('next');
+            });
+            
+            btnBack.addEventListener('click', function() {
+                moveItemsOnClick('back');
+            });
+            
+         
+            let thumbItems = document.querySelectorAll('.thumb-item');
+            thumbItems.forEach((thumb, index) => {
+                thumb.addEventListener('click', function() {
+       
+                    let clickCount = index;
+                    let interval = setInterval(() => {
+                        if (clickCount <= 0) {
+                            clearInterval(interval);
+                            return;
+                        }
+                        moveItemsOnClick('next');
+                        clickCount--;
+                    }, 200);
+                });
+            });
+     
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    moveItemsOnClick('back');
+                } else if (e.key === 'ArrowRight') {
+                    moveItemsOnClick('next');
+                }
+            });
+            
+            
+            updateActiveStates();
+        });
+    </script>
+    </body>
+</html>
